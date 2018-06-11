@@ -24,7 +24,8 @@ app.post('/upload', upload.single('photos'), function(req,res){
     io.emit('imageMessage',{
         message: req.file.url,
         user_name: req.body.user_name,
-        id: req.body.user_id,
+        user_id: req.body.user_id,
+        id: req.body.id,
         type: "image",
         timestamp: new Date()
     })
@@ -33,15 +34,10 @@ app.post('/upload', upload.single('photos'), function(req,res){
 
 io.on('connection', function(socket){
     let name = socket.handshake.query.name
-    io.emit('conn', {name:name, time:new Date()})
+    io.emit('conn', {name:name, timestamp:new Date()})
 
-    socket.on('message',(data)=>{
+    socket.on('message',(data)=>{data.timestamp=new Date()
         socket.broadcast.emit('message',data)
-    })
-
-    socket.on('image',(data)=>{
-        console.log(data)
-        io.emit('image',data)
     })
 
     socket.on('disconnect',(reason)=>{
