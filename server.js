@@ -19,7 +19,11 @@ app.get('/', function(req, res){
     res.send("Hello World!")
 });
 
-app.post('/upload', upload.single('photos'), function(req,res){
+app.post('/describeImage', upload.any(), (req,res)=>{
+    io.emit('imageMessage',req.body)
+})
+
+app.post('/upload', upload.single('photos'), (req,res)=>{
     console.log(req.body)
     io.emit('imageMessage',{
         message: req.file.url,
