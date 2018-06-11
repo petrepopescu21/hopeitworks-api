@@ -20,6 +20,8 @@ app.get('/', function(req, res){
 });
 
 app.post('/describeImage', upload.any(), (req,res)=>{
+    console.log('Hello')
+    console.log(req.body)
     io.emit('imageMessage',req.body)
 })
 
