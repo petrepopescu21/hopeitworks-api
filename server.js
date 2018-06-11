@@ -2,7 +2,7 @@ require('dotenv').config()
 var cors = require('cors')
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var io = require('socket.io')(http, {transports: ['websocket', 'xhr-polling']});
 var multer = require('multer')
 var MulterAzureStorage = require('multer-azure-storage')
 var upload = multer({
