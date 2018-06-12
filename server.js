@@ -13,6 +13,7 @@ var upload = multer({
     })
 })
 var axios = require('axios')
+var uuidv1 = require('uuid/v1')
 
 app.use(cors())
 
@@ -49,7 +50,7 @@ app.post('/upload', upload.single('photos'), (req, res) => {
 
 io.on('connection', function (socket) {
     let name = socket.handshake.query.name
-    io.emit('conn', { name: name, timestamp: new Date() })
+    //io.emit('conn', { name: name, timestamp: new Date(), id:uuidv1() })
 
     socket.on('message', (data) => {
     data.timestamp = new Date()
@@ -57,7 +58,7 @@ io.on('connection', function (socket) {
     })
 
     socket.on('disconnect', (reason) => {
-        io.emit('disconn', { name: name, time: new Date() })
+        //io.emit('disconn', { name: name, timestamp: new Date(), id:uuidv1() })
     })
 });
 
