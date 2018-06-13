@@ -25,18 +25,18 @@ app.get('/', function (req, res) {
 app.post('/upload', upload.single('photos'), (req, res) => {
     console.log('Printing out URL')
     console.log(req.file.url)
-    axios.post('https://prod-27.westeurope.logic.azure.com:443/workflows/02c4a43145e04c5db1cba333a78fae62/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=0elUSu3KXuRspCR6IPNPsj85qccCHFTPFfBQmQgX9BM',
-        { url: req.file.url }).then(res=>{
+    axios.post(process.env.LOGIC_APP_TRIGGER,
+        { url: req.file.url }).then(res => {
             console.log(res.data.description)
             io.emit('describeImage', {
-                message: "@"+req.body.user_name+" - Your image contains "+res.data.description.captions[0].text,
+                message: "@" + req.body.user_name + " - Your image contains " + res.data.description.captions[0].text,
                 user_name: "Vision Bot",
                 user_id: "v1s10nb00t",
                 id: "1",
                 type: "message",
                 timestamp: new Date()
             })
-    })
+        })
     io.emit('imageMessage', {
         message: req.file.url,
         user_name: req.body.user_name,
@@ -53,12 +53,12 @@ io.on('connection', function (socket) {
     //io.emit('conn', { name: name, timestamp: new Date(), id:uuidv1() })
 
     socket.on('message', (data) => {
-    data.timestamp = new Date()
+        data.timestamp = new Date()
         socket.broadcast.emit('message', data)
     })
 
     socket.on('disconnect', (reason) => {
-        //io.emit('disconn', { name: name, timestamp: new Date(), id:uuidv1() })
+    //io.emit('disconn', { name: name, timestamp: new Date(), id:uuidv1() })
     })
 });
 
